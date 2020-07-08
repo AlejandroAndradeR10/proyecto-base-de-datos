@@ -161,18 +161,19 @@ v_fecha_finalizacion to_date:='2020/06/15 8:30:00'; /* agregar el formato */
 v_costo_proyecto number(15):=2000;
 v_mensaje varchar2(50);
 begin 
-crear_proyectos(v_id_usuario,v_nombre_proyecto,v_duracion_proyecto,v_prioridad,v_fecha_inicio,v_fecha_finalizacion,v_costo_proyecto);
+crear_proyectos(v_id_usuario,v_nombre_proyecto,v_duracion_proyecto,v_prioridad,v_fecha_inicio,v_fecha_finalizacion,v_costo_proyecto,v_mensaje);
 DBMS_output.put_line(v_mensaje);
 end;
 /
 /*---------------------------------------------------*/
 create or replace procedure CambioRol(
-p_nombre_usuario  in nombre_usuario.usuario%type,
-p_id_rol          in id_rol.usuario%type,
+p_nombre_usuario  in usuario.nombre_usuario%type,
+p_id_rol          in usuario.id_rol%type,
 P_mensaje         out varchar2)
 as
-v_id ID_usuario.usuario%type;
+v_id usuario. ID_usuario%type;
 begin
+p_mensaje:='se ha creado el registro'
 select ID_usuario into v_id from usuario where nombre_usuario=p_nombre_usuario;
 update usuario 
 set id_rol = p_id_rol;
@@ -186,20 +187,44 @@ end CambioRol;
 
 SET serveroutput ON
 declare
-v_nombre_usuario varchar2(35):='Kadir507';
+v_nombre_usuario varchar(20):='Kadir507';
 v_Nid_rol        number(15):=4;
-
-inser_usuarios(v_nombre_usuario,);
+BEGIN
+CambioRol(v_nombre_usuario,v_Nid_rol,v_mensaje);
 DBMS_output.put_line(v_mensaje);
 end;
 /
 /*-------------------------------------------*/
-create or replace procedure crear_actividad (    
+create or replace procedure crear_actividad (
+p_Id_actividades in actividades.Id_actividades%type,
+P_Id_proyectos in actividades.id_proyectos%type,
+P_duracion_actividad in actividades.duracion_actividad%type,
+P_fecha_actividad in actividades.fecha_actividad%type,
+P_mensaje out varchar2
 )
-IS
-BEGIN 
+as
 
-END
+BEGIN 
+insert into(Id_actividades,id_proyectos,duracion_actividad,fecha_actividad)
+values(p_Id_actividades,P_Id_proyectos,P_duracion_actividad,P_fecha_actividad)
+
+EXCEPTION
+    WHEN others THEN
+        p_mensaje:='No se ha creado el registro...';
+End crear_actividad;
+
+
+SET serveroutput ON
+declare
+v_Id_actividades number(10):=1;
+v_id_proyectos  number(15):=1;
+v_duracion_actividad  number(15):=8;
+v_fecha_actividad date:='05/15/2020';
+v_mensaje varchar2(50);
+begin 
+crear_actividad(v_Id_actividades,v_id_proyectos,v_duracion_actividad,v_fecha_actividad,v_mensaje);
+DBMS_output.put_line(v_mensaje);
+end;
 /
 
 
